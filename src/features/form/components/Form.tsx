@@ -1,8 +1,8 @@
-import React from "react";
+import React, { useState } from "react";
 import { connect, useSelector } from "react-redux";
 import { Field, formValueSelector, reduxForm } from "redux-form";
 import normalizeTime from "../helpers/normalize";
-import { Button, Form, Input, InputNumber, Select } from "antd";
+import { Button, Form, Input, InputNumber, message, Select } from "antd";
 import { makeAntField } from "../helpers/makeAntField";
 import { IOrder, IProps, IRootState } from "../types/types";
 import { validateForm } from "../helpers/validation";
@@ -27,6 +27,8 @@ let HexOceanForm: any = (props: IProps) => {
     submitting,
   } = props;
 
+  const [isFetching, setFetching] = useState(false);
+
   const areInputErrors: boolean =
     Object.keys(
       useSelector(
@@ -35,6 +37,8 @@ let HexOceanForm: any = (props: IProps) => {
     ).length > 0;
 
   const onSubmit = () => {
+    setFetching(true);
+
     const order: IOrder = {
       name: name,
       preparation_time: prepTime,
@@ -52,7 +56,16 @@ let HexOceanForm: any = (props: IProps) => {
       order.slices_of_bread = Number(breadSlices);
     }
 
-    placeOrder(order).then((data: any) => console.log(data));
+    placeOrder(order)
+      .then((data) => {
+        setFetching(false);
+        console.log("Success:", data);
+        reset();
+        message.success("All data is saved");
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+      });
   };
 
   return (
@@ -139,16 +152,17 @@ let HexOceanForm: any = (props: IProps) => {
       ) : null}
 
       <div style={{ textAlign: "center" }}>
-        <Button
-          type="primary"
-          style={{ marginRight: "10px" }}
-          disabled={areInputErrors}
-          onClick={onSubmit}
-        >
-          Submit
-        </Button>
         <Button disabled={pristine || submitting} onClick={reset}>
           Clear Values
+        </Button>
+        <Button
+          type="primary"
+          style={{ marginLeft: "10px" }}
+          disabled={areInputErrors}
+          onClick={onSubmit}
+          loading={isFetching}
+        >
+          Submit
         </Button>
       </div>
     </Form>
