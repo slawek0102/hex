@@ -6,6 +6,7 @@ import { Button, Form, Input, InputNumber, Select } from "antd";
 import { makeAntField } from "../helpers/makeAntField";
 import { IOrder, IProps, IRootState } from "../types/types";
 import { validateForm } from "../helpers/validation";
+import { placeOrder } from "../helpers/restCalls";
 
 const { Option } = Select;
 const AntInput = makeAntField(Input);
@@ -51,7 +52,7 @@ let HexOceanForm: any = (props: IProps) => {
       order.slices_of_bread = Number(breadSlices);
     }
 
-    console.log("order", order);
+    placeOrder(order).then((data: any) => console.log(data));
   };
 
   return (
