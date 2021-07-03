@@ -14,7 +14,7 @@ export interface IOrder {
   type: string;
   no_of_slices?: number;
   diameter?: number;
-  spiciness_scale?: string;
+  spiciness_scale?: number;
   slices_of_bread?: number;
 }
 

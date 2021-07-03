@@ -46,7 +46,7 @@ let HexOceanForm: any = (props: IProps) => {
       order.diameter = parseFloat(pizzaDiameter);
     }
     if (foodType === "soup") {
-      order.spiciness_scale = spiciness;
+      order.spiciness_scale = Number(spiciness);
     }
     if (foodType === "sandwich") {
       order.slices_of_bread = Number(breadSlices);
